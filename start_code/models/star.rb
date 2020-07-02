@@ -25,4 +25,36 @@ class Star
         SqlRunner.run(sql)
     end
 
+    def delete()
+        sql = "DELETE * from stars where id = $1"
+        values = [@id]
+        SqlRunner.run(sql, values)
+    end
+
+    def self.all()
+        sql = "select * from stars"
+        stars = SqlRunner.run(sql)
+        return results = self.map_items(stars)
+    end
+
+    def self.find(id)
+        sql = "select * from stars where id = $1"
+        values = [id]
+        results = SqlRunner.run(sql, values)
+        return Star.new(results.first)
+    end
+
+    def update()
+        sql = "update stars set
+        (first_name, last_name)
+        = ($1, $2)
+        where id = $3"
+        values = [@first_name, @last_name, @id]
+        SqlRunner.run(sql, values)
+    end
+
+
+    def self.map_items(data)
+        return data.map {|location| Star.new(location)}
+    end
 end

@@ -24,6 +24,10 @@ casting1 = Casting.new({ 'movie_id' => movie1.id,
     'fee' => 100000})
 casting1.save()
 
+casting1.fee = 350
+casting1.update()
+
+casting1.delete()
 
 binding.pry
 nil

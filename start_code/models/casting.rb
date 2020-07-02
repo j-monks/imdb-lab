@@ -12,7 +12,7 @@ class Casting
         @fee = options["fee"].to_i
     end
 
-    def save()
+    def save() # CREATE 
         sql = "INSERT INTO castings
         (movie_id, star_id, fee)
         VALUES
@@ -23,9 +23,44 @@ class Casting
         @id = casting["id"].to_i
     end
 
-    def self.delete_all()
+    def self.all() # READ
+        sql = "SELECT * FROM castings"
+        castings = SqlRunner.run(sql)
+        return self.map_items(castings)
+    end
+
+    def self.find(id)
+        sql = "SELECT * FROM castings
+        WHERE id = $1"
+        values = [id]
+        result = SqlRunner.run(sql, values)
+        return Casting.new(result[0])
+    end
+
+    def delete()
+        sql = "DELETE FROM castings
+        WHERE id = $1"
+        values = [@id]
+        SqlRunner.run(sql, values)
+    end
+
+    def update() # UPDATE   
+        sql = "UPDATE castings SET
+        (movie_id, star_id, fee)
+        = 
+        ($1, $2, $3) 
+        WHERE id = $4"
+        values = [@movie_id, @star_id, @fee, @id]
+        SqlRunner.run(sql, values)
+    end
+
+    def self.delete_all() # DELETE
         sql = "DELETE FROM castings"
         SqlRunner.run(sql)
     end
-    
+
+    def self.map_items(data) # MAP HELPER
+        return data.map { |casting| Casting.new(casting) }
+    end
+
 end
